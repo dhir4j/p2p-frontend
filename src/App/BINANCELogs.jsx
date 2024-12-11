@@ -9,7 +9,7 @@ function LogsTable({ exchangeName }) {
   const [timestamps, setTimestamps] = useState([]);
   const [countriesData, setCountriesData] = useState({});
   const [showDashboard, setShowDashboard] = useState(false);
-  const webapp = 'https://dvds-occasions-impossible-bet.trycloudflare.com';
+  const webapp = 'https://hard4j.pythonanywhere.com';
 
   useEffect(() => {
     fetch(`${webapp}/logs?exchange=binance`)

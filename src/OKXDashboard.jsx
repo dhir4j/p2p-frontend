@@ -14,7 +14,7 @@ function OKX_Dashboard() {
   const [metrics, setMetrics] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
   const [showLogs, setShowLogs] = useState(false);
-  const webapp = 'https://dvds-occasions-impossible-bet.trycloudflare.com';
+  const webapp = 'https://hard4j.pythonanywhere.com';
 
 
   useEffect(() => {
