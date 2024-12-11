@@ -39,67 +39,105 @@ function Example({ children }) {
     }
   };
 
+  // Force dark mode for mobile view
+  useEffect(() => {
+    const mobileMediaQuery = window.matchMedia('(max-width: 1024px)');
+    
+    const applyDarkMode = () => {
+      if (mobileMediaQuery.matches) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    };
+
+    // Initial check
+    applyDarkMode();
+
+    // Listen for media query changes
+    mobileMediaQuery.addListener(applyDarkMode);
+
+    // Cleanup listener
+    return () => {
+      mobileMediaQuery.removeListener(applyDarkMode);
+    };
+  }, []);
+
   return (
-    <StackedLayout
-      navbar={
-        <Navbar>
-          <NavbarLabel>
-            <img
-              src={AnymLogo}
-              alt="Anym Logo"
-              className="w-auto h-auto"
-              style={{ borderRadius: '0', border: 'none', objectFit: 'contain' }}
-            />
-          </NavbarLabel>
-          <NavbarDivider className="max-lg:hidden" />
-          <NavbarSection className="max-lg:hidden">
-            {navItems.map(({ label, url }) => (
-              <div key={label} className="relative">
-                <NavbarItem
-                  href={url}
-                  onClick={(e) => handleNavClick(label, url, e)}
-                  className={activeNav === label ? 'text-blue-500' : 'text-gray-700'}
-                >
-                  {label}
-                </NavbarItem>
-                {activeNav === label && (
-                  <span className="absolute inset-x-2 -bottom-2.5 h-0.5 rounded-full bg-zinc-950 dark:bg-white" style={{ opacity: 1 }}></span>
-                )}
-              </div>
-            ))}
-          </NavbarSection>
-        </Navbar>
-      }
-      sidebar={
-        <Sidebar className="lg:hidden">
-          <SidebarHeader>
-            <img
-              src={AnymLogo}
-              alt="Anym Logo"
-              className="h-8 w-auto mx-4 my-2"
-            />
-          </SidebarHeader>
-          <SidebarBody>
-            <SidebarSection>
+    <div className="dark:bg-zinc-950 dark:text-white">
+      <StackedLayout
+        navbar={
+          <Navbar>
+            <NavbarLabel>
+              <img
+                src={AnymLogo}
+                alt="Anym Logo"
+                className="w-auto h-auto"
+                style={{ borderRadius: '0', border: 'none', objectFit: 'contain' }}
+              />
+            </NavbarLabel>
+            <NavbarDivider className="max-lg:hidden" />
+            <NavbarSection className="max-lg:hidden">
               {navItems.map(({ label, url }) => (
-                <SidebarItem
-                  key={label}
-                  href={url}
-                  onClick={(e) => handleNavClick(label, url, e)}
-                  className={activeNav === label ? 'text-blue-500' : 'text-gray-700'}
-                >
-                  {label}
-                </SidebarItem>
+                <div key={label} className="relative">
+                  <NavbarItem
+                    href={url}
+                    onClick={(e) => handleNavClick(label, url, e)}
+                    className={`
+                      ${activeNav === label 
+                        ? 'text-blue-500 dark:text-blue-400' 
+                        : 'text-gray-700 dark:text-gray-300'}
+                    `}
+                  >
+                    {label}
+                  </NavbarItem>
+                  {activeNav === label && (
+                    <span 
+                      className="absolute inset-x-2 -bottom-2.5 h-0.5 rounded-full 
+                                 bg-zinc-950 dark:bg-white" 
+                      style={{ opacity: 1 }}
+                    ></span>
+                  )}
+                </div>
               ))}
-            </SidebarSection>
-          </SidebarBody>
-        </Sidebar>
-      }
-    >
-      <div className="w-full px-4 py-4 md:px-6">
-        {renderContent()}
-      </div>
-    </StackedLayout>
+            </NavbarSection>
+          </Navbar>
+        }
+        sidebar={
+          <Sidebar className="lg:hidden">
+            <SidebarHeader>
+              <img
+                src={AnymLogo}
+                alt="Anym Logo"
+                className="h-8 w-auto mx-4 my-2"
+              />
+            </SidebarHeader>
+            <SidebarBody>
+              <SidebarSection>
+                {navItems.map(({ label, url }) => (
+                  <SidebarItem
+                    key={label}
+                    href={url}
+                    onClick={(e) => handleNavClick(label, url, e)}
+                    className={`
+                      ${activeNav === label 
+                        ? 'text-blue-500 dark:text-blue-400' 
+                        : 'text-gray-700 dark:text-gray-300'}
+                    `}
+                  >
+                    {label}
+                  </SidebarItem>
+                ))}
+              </SidebarSection>
+            </SidebarBody>
+          </Sidebar>
+        }
+      >
+        <div className="w-full px-4 py-4 md:px-6">
+          {renderContent()}
+        </div>
+      </StackedLayout>
+    </div>
   );
 }
 
