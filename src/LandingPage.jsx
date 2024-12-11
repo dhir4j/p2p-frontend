@@ -1,23 +1,44 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Navbar, NavbarDivider, NavbarItem, NavbarLabel, NavbarSection, NavbarSpacer } from './components/navbar';
 import { StackedLayout } from './components/stacked-layout';
-import AnymLogo from './assets/white_brand_name_logo.svg'; // Update the path according to your folder structure
-import BybitDashboard from './BYBITDashboard'; // Import the Bybit dashboard
+import AnymLogo from './assets/white_brand_name_logo.svg';
+import BybitDashboard from './BYBITDashboard';
 import BinanceDashboard from './BINANCEDashboard';
 import OkxDashboard from './OKXDashboard';
 
-
 const navItems = [
-  { label: 'Home', url: '/' },
+  { label: 'Home', url: 'https://anym.ai/' },
   { label: 'Binance', url: '/binance' },
   { label: 'Bybit', url: '/bybit' },
   { label: 'OKX', url: '/okx' },
 ];
 
 function Example({ children }) {
-  const [activeNav, setActiveNav] = useState('Home'); // Default active item is Home
-  const [query, setQuery] = useState(''); // State to hold the input value
+  const [activeNav, setActiveNav] = useState('Binance'); // Set default to Binance
+  const [query, setQuery] = useState('');
 
+  const handleNavClick = (label, url, e) => {
+    e.preventDefault();
+    if (label === 'Home') {
+      window.location.href = url;
+    } else {
+      setActiveNav(label);
+    }
+  };
+
+  // Render the appropriate content based on active nav
+  const renderContent = () => {
+    switch (activeNav) {
+      case 'Binance':
+        return <BinanceDashboard />;
+      case 'Bybit':
+        return <BybitDashboard />;
+      case 'OKX':
+        return <OkxDashboard />;
+      default:
+        return <BinanceDashboard />; // Fallback to Binance dashboard
+    }
+  };
 
   return (
     <StackedLayout
@@ -37,11 +58,8 @@ function Example({ children }) {
               <div key={label} className="relative">
                 <NavbarItem
                   href={url}
-                  onClick={(e) => {
-                    e.preventDefault(); // Prevent navigation
-                    setActiveNav(label); // Update active nav item
-                  }}
-                  className={activeNav === label ? 'text-blue-500' : 'text-gray-700'} // Active item styling
+                  onClick={(e) => handleNavClick(label, url, e)}
+                  className={activeNav === label ? 'text-blue-500' : 'text-gray-700'}
                 >
                   {label}
                 </NavbarItem>
@@ -51,17 +69,12 @@ function Example({ children }) {
               </div>
             ))}
           </NavbarSection>
-
         </Navbar>
       }
     >
-      {activeNav === 'Binance' ? <BinanceDashboard /> : children} 
-      {activeNav === 'Bybit' ? <BybitDashboard /> : children} 
-      {activeNav === 'OKX' ? <OkxDashboard /> : children} 
-    
+      {renderContent()}
     </StackedLayout>
   );
 }
 
 export default Example;
-
