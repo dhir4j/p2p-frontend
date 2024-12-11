@@ -14,7 +14,25 @@ function BINANCE_Dashboard() {
   const [metrics, setMetrics] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
   const [showLogs, setShowLogs] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const webapp = 'https://hard4j.pythonanywhere.com';
+
+  useEffect(() => {
+    const checkMobileView = () => {
+      setIsMobile(window.innerWidth <= 1024);
+    };
+
+    // Initial check
+    checkMobileView();
+
+    // Add event listener
+    window.addEventListener('resize', checkMobileView);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('resize', checkMobileView);
+    };
+  }, []);
 
   useEffect(() => {
     fetch(`${webapp}/api/dashboard?exchange=binance`)
@@ -112,49 +130,83 @@ function BINANCE_Dashboard() {
   }
 
   return (
-    <div className="bg-[#18181B] p-4 rounded-lg shadow-md">
+    <div className={`
+      p-4 rounded-lg shadow-md 
+      ${isMobile 
+        ? 'bg-white text-black dark:bg-black dark:text-white' 
+        : 'bg-[#18181B] text-white'
+      }
+    `}>
       <Strong>Overview</Strong>
 
-      <div className="bg-[#2a2a2e] p-3 rounded-lg flex justify-between mt-4">
-        <div className="bg-[#2a2a2e] text-center p-2 rounded-lg w-1/4">
+      <div className={`
+        flex justify-between mt-4 
+        ${isMobile 
+          ? 'bg-gray-100 dark:bg-[#2a2a2e]' 
+          : 'bg-[#2a2a2e]'
+        }
+        p-3 rounded-lg
+      `}>
+        <div className={`
+          text-center p-2 rounded-lg w-1/4 
+          ${isMobile 
+            ? 'bg-white dark:bg-[#2a2a2e]' 
+            : 'bg-[#2a2a2e]'
+          }
+        `}>
           <Strong>Total Liquidity (USDT)</Strong>
           <Text>{metrics.total_liquidity ? formatNumberWithCommas(metrics.total_liquidity) : 'Loading...'}</Text>
         </div>
-        <div className="bg-[#2a2a2e] text-center p-2 rounded-lg w-1/4">
+        <div className={`
+          text-center p-2 rounded-lg w-1/4 
+          ${isMobile 
+            ? 'bg-white dark:bg-[#2a2a2e]' 
+            : 'bg-[#2a2a2e]'
+          }
+        `}>
           <Strong>Total Countries</Strong>
           <Text>{metrics.total_countries ? metrics.total_countries : 'Loading...'}</Text>
         </div>
-        <div className="bg-[#2a2a2e] text-center p-2 rounded-lg w-1/4">
+        <div className={`
+          text-center p-2 rounded-lg w-1/4 
+          ${isMobile 
+            ? 'bg-white dark:bg-[#2a2a2e]' 
+            : 'bg-[#2a2a2e]'
+          }
+        `}>
           <Strong>Average Spread</Strong>
           <Text>{metrics.average_spread ? metrics.average_spread.toFixed(2)+'%' : 'Loading...'}</Text>
         </div>
-        <div className="bg-[#2a2a2e] text-center p-2 rounded-lg w-1/3">
+        <div className={`
+          text-center p-2 rounded-lg w-1/3 
+          ${isMobile 
+            ? 'bg-white dark:bg-[#2a2a2e]' 
+            : 'bg-[#2a2a2e]'
+          }
+        `}>
           <Strong>Unique Payment Methods</Strong>
           <Text>{metrics.unique_payment_methods_count ? metrics.unique_payment_methods_count : 'Loading...'}</Text>
         </div>
       </div>
       
       <div className="p-2"></div>
-          <NavbarSection className="flex w-full">
-
-
-          <NavbarItem className="flex items-center w-auto">
-            <MagnifyingGlassIcon className="h-5 w-5" />
-            <Input
-              name="search"
-              placeholder="Search Country…"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </NavbarItem>
-          <Button
-            onClick={handleNavigateToLogs}
-            className="text-500 hover:text-700 font-medium"
-          >
-            Liquidity History
-          </Button>
-
-        </NavbarSection>
+      <NavbarSection className="flex w-full">
+        <NavbarItem className="flex items-center w-auto">
+          <MagnifyingGlassIcon className="h-5 w-5" />
+          <Input
+            name="search"
+            placeholder="Search Country…"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </NavbarItem>
+        <Button
+          onClick={handleNavigateToLogs}
+          className="text-500 hover:text-700 font-medium"
+        >
+          Liquidity History
+        </Button>
+      </NavbarSection>
 
       <div className="p-2"></div>
 
