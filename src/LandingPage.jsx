@@ -16,6 +16,7 @@ const navItems = [
 
 function Example({ children }) {
   const [activeNav, setActiveNav] = useState('Binance');
+  const [isMobile, setIsMobile] = useState(false);
 
   const handleNavClick = (label, url, e) => {
     e.preventDefault();
@@ -39,35 +40,36 @@ function Example({ children }) {
     }
   };
 
-  // Force dark mode for mobile view
   useEffect(() => {
-    const mobileMediaQuery = window.matchMedia('(max-width: 1024px)');
-    
-    const applyDarkMode = () => {
-      if (mobileMediaQuery.matches) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
+    const checkMobileView = () => {
+      setIsMobile(window.innerWidth <= 1024);
     };
 
     // Initial check
-    applyDarkMode();
+    checkMobileView();
 
-    // Listen for media query changes
-    mobileMediaQuery.addListener(applyDarkMode);
+    // Add event listener
+    window.addEventListener('resize', checkMobileView);
 
-    // Cleanup listener
+    // Cleanup
     return () => {
-      mobileMediaQuery.removeListener(applyDarkMode);
+      window.removeEventListener('resize', checkMobileView);
     };
   }, []);
 
   return (
-    <div className="dark:bg-zinc-950 dark:text-white">
+    <div className={`
+      ${isMobile 
+        ? 'bg-white text-black dark:bg-black dark:text-white' 
+        : ''}
+    `}>
       <StackedLayout
         navbar={
-          <Navbar>
+          <Navbar className={`
+            ${isMobile 
+              ? 'bg-white text-black dark:bg-black dark:text-white' 
+              : ''}
+          `}>
             <NavbarLabel>
               <img
                 src={AnymLogo}
@@ -85,16 +87,24 @@ function Example({ children }) {
                     onClick={(e) => handleNavClick(label, url, e)}
                     className={`
                       ${activeNav === label 
-                        ? 'text-blue-500 dark:text-blue-400' 
-                        : 'text-gray-700 dark:text-gray-300'}
+                        ? (isMobile 
+                            ? 'text-blue-700 dark:text-blue-400' 
+                            : 'text-blue-500')
+                        : (isMobile 
+                            ? 'text-gray-900 dark:text-gray-100' 
+                            : 'text-gray-700')}
                     `}
                   >
                     {label}
                   </NavbarItem>
                   {activeNav === label && (
                     <span 
-                      className="absolute inset-x-2 -bottom-2.5 h-0.5 rounded-full 
-                                 bg-zinc-950 dark:bg-white" 
+                      className={`
+                        absolute inset-x-2 -bottom-2.5 h-0.5 rounded-full
+                        ${isMobile 
+                          ? 'bg-black dark:bg-white' 
+                          : 'bg-zinc-950'}
+                      `} 
                       style={{ opacity: 1 }}
                     ></span>
                   )}
@@ -104,7 +114,12 @@ function Example({ children }) {
           </Navbar>
         }
         sidebar={
-          <Sidebar className="lg:hidden">
+          <Sidebar className={`
+            lg:hidden 
+            ${isMobile 
+              ? 'bg-white text-black dark:bg-black dark:text-white' 
+              : ''}
+          `}>
             <SidebarHeader>
               <img
                 src={AnymLogo}
@@ -121,8 +136,12 @@ function Example({ children }) {
                     onClick={(e) => handleNavClick(label, url, e)}
                     className={`
                       ${activeNav === label 
-                        ? 'text-blue-500 dark:text-blue-400' 
-                        : 'text-gray-700 dark:text-gray-300'}
+                        ? (isMobile 
+                            ? 'text-blue-700 dark:text-blue-400' 
+                            : 'text-blue-500')
+                        : (isMobile 
+                            ? 'text-gray-900 dark:text-gray-100' 
+                            : 'text-gray-700')}
                     `}
                   >
                     {label}
@@ -133,7 +152,12 @@ function Example({ children }) {
           </Sidebar>
         }
       >
-        <div className="w-full px-4 py-4 md:px-6">
+        <div className={`
+          w-full px-4 py-4 md:px-6
+          ${isMobile 
+            ? 'bg-white text-black dark:bg-black dark:text-white' 
+            : ''}
+        `}>
           {renderContent()}
         </div>
       </StackedLayout>
