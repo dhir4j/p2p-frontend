@@ -11,13 +11,11 @@ function LogsTable({ exchangeName }) {
   const [showDashboard, setShowDashboard] = useState(false);
   const webapp = 'https://hard4j.pythonanywhere.com';
 
-
   useEffect(() => {
     fetch(`${webapp}/logs?exchange=bybit`)
       .then((response) => response.json())
       .then((data) => {
         if (data.length > 0) {
-          // Extract timestamps and organize country data
           const extractedTimestamps = data.map((log) => log.timestamp);
           const organizedCountriesData = {};
 
@@ -50,11 +48,14 @@ function LogsTable({ exchangeName }) {
   }
 
   return (
-    <div className="bg-[#18181B] p-4 rounded-lg shadow-md">
+    <div className="dark:bg-[#18181B] bg-[#D3D3D3] p-4 rounded-lg shadow-md">
       <div className="flex justify-between items-center w-full">
-        <Strong>{exchangeName} Liquidity Snapshots</Strong>
+        <Strong className="dark:text-white text-black">{exchangeName} Liquidity Snapshots</Strong>
 
-        <Button onClick={handleNavigateToDashboard} className="text-500 hover:text-700 font-medium">
+        <Button 
+          onClick={handleNavigateToDashboard} 
+          className="dark:text-gray-300 text-gray-700 hover:text-gray-300 dark:hover:text-gray-100 font-medium"
+        >
           Return to Dashboard
         </Button>
       </div>
@@ -63,23 +64,23 @@ function LogsTable({ exchangeName }) {
       <Table>
         <TableHead>
           <TableRow>
-            <TableHeader>Timestamp</TableHeader>
+            <TableHeader className="dark:text-white text-black">Timestamp</TableHeader>
             {Object.keys(countriesData).map((country, index) => (
-              <TableHeader key={index}>{country}</TableHeader>
+              <TableHeader key={index} className="dark:text-white text-black">{country}</TableHeader>
             ))}
           </TableRow>
         </TableHead>
         <TableBody>
           {timestamps.map((timestamp, rowIndex) => (
-            <TableRow key={rowIndex}>
-              <TableCell>{timestamp}</TableCell>
+            <TableRow key={rowIndex} className="dark:hover:bg-[#2a2a2e] hover:bg-gray-50">
+              <TableCell className="dark:text-white text-black">{timestamp}</TableCell>
               {Object.keys(countriesData).map((country, colIndex) => (
-                <TableCell key={colIndex}>
-                {countriesData[country][rowIndex] !== null && !isNaN(countriesData[country][rowIndex])
-                  ? parseFloat(countriesData[country][rowIndex])
-                      .toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-                  : 'N/A'}
-              </TableCell>
+                <TableCell key={colIndex} className="dark:text-white text-black">
+                  {countriesData[country][rowIndex] !== null && !isNaN(countriesData[country][rowIndex])
+                    ? parseFloat(countriesData[country][rowIndex])
+                        .toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                    : 'N/A'}
+                </TableCell>
               ))}
             </TableRow>
           ))}

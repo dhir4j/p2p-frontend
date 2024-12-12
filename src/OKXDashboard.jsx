@@ -16,7 +16,6 @@ function OKX_Dashboard() {
   const [showLogs, setShowLogs] = useState(false);
   const webapp = 'https://hard4j.pythonanywhere.com';
 
-
   useEffect(() => {
     fetch(`${webapp}/api/dashboard?exchange=okx`)
       .then(response => response.json())
@@ -113,49 +112,57 @@ function OKX_Dashboard() {
   }
 
   return (
-    <div className="bg-[#18181B] p-4 rounded-lg shadow-md">
+    <div className="dark:bg-[#18181B] bg-[#D3D3D3] p-4 rounded-lg shadow-md dark:text-white text-black">
+
       <Strong>Overview</Strong>
 
-      <div className="bg-[#2a2a2e] p-3 rounded-lg flex justify-between mt-4">
-        <div className="bg-[#2a2a2e] text-center p-2 rounded-lg w-1/4">
+      <div className="dark:bg-[#2a2a2e] bg-[#bebebe] p-3 rounded-lg flex justify-between mt-4">
+        <div className="text-center p-2 rounded-lg w-1/4">
           <Strong>Total Liquidity (USDT)</Strong>
-          <Text>{metrics.total_liquidity ? formatNumberWithCommas(metrics.total_liquidity) : 'Loading...'}</Text>
+          <Text className="dark:text-white text-black">
+            {metrics.total_liquidity ? formatNumberWithCommas(Math.round(metrics.total_liquidity)) : 'Loading...'}
+          </Text>
         </div>
-        <div className="bg-[#2a2a2e] text-center p-2 rounded-lg w-1/4">
+        <div className="text-center p-2 rounded-lg w-1/4">
           <Strong>Total Countries</Strong>
-          <Text>{metrics.total_countries ? metrics.total_countries : 'Loading...'}</Text>
+          <Text className="dark:text-white text-black">
+            {metrics.total_countries ? metrics.total_countries : 'Loading...'}
+          </Text>
         </div>
-        <div className="bg-[#2a2a2e] text-center p-2 rounded-lg w-1/4">
+        <div className="text-center p-2 rounded-lg w-1/4">
           <Strong>Average Spread</Strong>
-          <Text>{metrics.average_spread ? metrics.average_spread.toFixed(2)+'%' : 'Loading...'}</Text>
+          <Text className="dark:text-white text-black">
+            {metrics.average_spread ? metrics.average_spread.toFixed(2)+'%' : 'Loading...'}
+          </Text>
         </div>
-        <div className="bg-[#2a2a2e] text-center p-2 rounded-lg w-1/3">
+        <div className="text-center p-2 rounded-lg w-1/3">
           <Strong>Unique Payment Methods</Strong>
-          <Text>{metrics.unique_payment_methods_count ? metrics.unique_payment_methods_count : 'Loading...'}</Text>
+          <Text className="dark:text-white text-black">
+            {metrics.unique_payment_methods_count ? metrics.unique_payment_methods_count : 'Loading...'}
+          </Text>
         </div>
       </div>
       
       <div className="p-2"></div>
-          <NavbarSection className="flex w-full">
-
-
-          <NavbarItem className="flex items-center w-auto">
-            <MagnifyingGlassIcon className="h-5 w-5" />
-            <Input
-              name="search"
-              placeholder="Search Country…"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </NavbarItem>
-          <Button
-            onClick={handleNavigateToLogs}
-            className="text-500 hover:text-700 font-medium"
-          >
-            Liquidity History
-          </Button>
-
-        </NavbarSection>
+      <NavbarSection className="flex w-full">
+        <NavbarItem className="flex items-center w-auto">
+          <MagnifyingGlassIcon className="h-5 w-5 dark:text-white text-black" />
+          <Input
+            name="search"
+            placeholder="Search Country…"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            // className="dark:bg-[#2a2a2e] bg-white dark:text-white text-black"
+          />
+        </NavbarItem>
+        <Button
+          onClick={handleNavigateToLogs}
+          // className="dark:text-gray-300 text-gray-700 hover:text-gray-900 dark:hover:text-gray-100 font-medium"
+          lassName="dark:text-gray-300 text-gray-700 hover:text-gray-300 dark:hover:text-gray-100 font-medium"
+        >
+          Liquidity History
+        </Button>
+      </NavbarSection>
 
       <div className="p-2"></div>
 
@@ -163,14 +170,14 @@ function OKX_Dashboard() {
         <Table>
           <TableHead>
             <TableRow>
-              <TableHeader>Date & Time</TableHeader>
-              <TableHeader>Country</TableHeader>
-              <TableHeader>Fiat Currency</TableHeader>
-              <TableHeader>Total Liquidity (USDT)</TableHeader>
-              <TableHeader>VWAP Price</TableHeader>
-              <TableHeader>Exchange Rate</TableHeader>
-              <TableHeader>Spread</TableHeader>
-              <TableHeader>Available Payment Methods</TableHeader>
+              <TableHeader className="dark:text-white text-black">Date & Time</TableHeader>
+              <TableHeader className="dark:text-white text-black">Country</TableHeader>
+              <TableHeader className="dark:text-white text-black">Fiat Currency</TableHeader>
+              <TableHeader className="dark:text-white text-black">Total Liquidity (USDT)</TableHeader>
+              <TableHeader className="dark:text-white text-black">VWAP Price</TableHeader>
+              <TableHeader className="dark:text-white text-black">Exchange Rate</TableHeader>
+              <TableHeader className="dark:text-white text-black">Spread</TableHeader>
+              <TableHeader className="dark:text-white text-black">Available Payment Methods</TableHeader>
             </TableRow>
           </TableHead>
 
@@ -181,14 +188,20 @@ function OKX_Dashboard() {
               const specificVwap = liquidityData[liquidityKey]?.specific_vwap;
 
               return (
-                <TableRow key={data.country}>
-                  <TableCell>{data.date_time}</TableCell>
-                  <TableCell>{data.country}</TableCell>
-                  <TableCell>{data.fiat_currency}</TableCell>
-                  <TableCell>{specificLiquidity ? formatNumberWithCommas(specificLiquidity) : formatNumberWithCommas(data.total_liquidity)}</TableCell>
-                  <TableCell>{specificVwap ? formatNumberWithCommas(specificVwap) : formatNumberWithCommas(data.volume_weighted_price.toFixed(2))}</TableCell>
-                  <TableCell>{formatNumberWithCommas(data.exchange_rate.toFixed(2))}</TableCell>
-                  <TableCell>{data.spread}</TableCell>
+                <TableRow key={data.country} className="dark:hover:bg-[#2a2a2e] hover:bg-gray-50">
+                  <TableCell className="dark:text-white text-black">{data.date_time}</TableCell>
+                  <TableCell className="dark:text-white text-black">{data.country}</TableCell>
+                  <TableCell className="dark:text-white text-black">{data.fiat_currency}</TableCell>
+                  <TableCell className="dark:text-white text-black">
+                    {specificLiquidity ? formatNumberWithCommas(specificLiquidity) : formatNumberWithCommas(Math.round(data.total_liquidity))}
+                  </TableCell>
+                  <TableCell className="dark:text-white text-black">
+                    {specificVwap ? formatNumberWithCommas(specificVwap) : formatNumberWithCommas(data.volume_weighted_price.toFixed(2))}
+                  </TableCell>
+                  <TableCell className="dark:text-white text-black">
+                    {formatNumberWithCommas(data.exchange_rate.toFixed(2))}
+                  </TableCell>
+                  <TableCell className="dark:text-white text-black">{data.spread}</TableCell>
                   <TableCell>
                     <div className="flex flex-wrap gap-4">
                       {data.available_payment_methods.map(payment => {
@@ -202,7 +215,7 @@ function OKX_Dashboard() {
                             {isClicked ? (
                               <Badge color="purple">{payment.method}</Badge>
                             ) : (
-                              payment.method
+                              <span className="dark:text-white text-black">{payment.method}</span>
                             )}
                           </span>
                         );
@@ -215,7 +228,7 @@ function OKX_Dashboard() {
           </TableBody>
         </Table>
       ) : (
-        <Text>No data found.</Text>
+        <Text className="dark:text-white text-black">No data found.</Text>
       )}
     </div>
   );
