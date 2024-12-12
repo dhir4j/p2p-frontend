@@ -72,7 +72,7 @@ function LogsTable({ exchangeName }) {
         </TableHead>
         <TableBody>
           {timestamps.map((timestamp, rowIndex) => (
-            <TableRow key={rowIndex} className="dark:hover:bg-[#2a2a2e] hover:bg-gray-50">
+            <TableRow key={rowIndex}>
               <TableCell className="dark:text-white text-black">{timestamp}</TableCell>
               {Object.keys(countriesData).map((country, colIndex) => (
                 <TableCell key={colIndex} className="dark:text-white text-black">

@@ -188,7 +188,7 @@ function BYBIT_Dashboard() {
               const specificVwap = liquidityData[liquidityKey]?.specific_vwap;
 
               return (
-                <TableRow key={data.country} className="dark:hover:bg-[#2a2a2e] hover:bg-gray-50">
+                <TableRow key={data.country}>
                   <TableCell className="dark:text-white text-black">{data.date_time}</TableCell>
                   <TableCell className="dark:text-white text-black">{data.country}</TableCell>
                   <TableCell className="dark:text-white text-black">{data.fiat_currency}</TableCell>
